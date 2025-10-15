@@ -8,6 +8,7 @@ public class Grower : MonoBehaviour
     private Vector3 _baseScale;
     private Vector3 _targetScale;
     private bool _isGrow = true;
+    private float _scaleThresholdSqr = 0.0001f;
 
     private void Start()
     {
@@ -21,7 +22,7 @@ public class Grower : MonoBehaviour
         {
             transform.localScale = Vector3.MoveTowards(transform.localScale, _targetScale, _scaleSpeed * Time.deltaTime);
 
-            if (transform.localScale == _targetScale)
+            if (IsAtTargetScale(_targetScale))
             {
                 _isGrow = false;
             }
@@ -30,10 +31,15 @@ public class Grower : MonoBehaviour
         {
             transform.localScale = Vector3.MoveTowards(transform.localScale, _baseScale, _scaleSpeed * Time.deltaTime);
 
-            if (Vector3.Distance(transform.localScale, _baseScale) < 0.05f)
+            if (IsAtTargetScale(_baseScale))
             {
                 _isGrow = true;
             }
         }
+    }
+
+    private bool IsAtTargetScale(Vector3 target)
+    {
+        return (transform.position - target).sqrMagnitude < _scaleThresholdSqr;
     }
 }

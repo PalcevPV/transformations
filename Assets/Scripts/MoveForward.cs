@@ -9,6 +9,7 @@ public class MoveForward : MonoBehaviour
     private Vector3 _startPosition;
     private Vector3 _targetPosition;
     private bool _isMoving = true;
+    private float _positionThresholdSqr = 0.0001f;
 
     private void Start()
     {
@@ -22,7 +23,7 @@ public class MoveForward : MonoBehaviour
         {
             transform.Translate(Vector3.forward * _moveSpeed * Time.deltaTime);
 
-            if (Vector3.Distance(transform.position, _targetPosition) < 0.05f)
+            if (IsAtTargetPosition(_targetPosition))
             {
                 _isMoving = false;
             }
@@ -31,10 +32,15 @@ public class MoveForward : MonoBehaviour
         {
             transform.Translate(Vector3.back * _moveSpeed * Time.deltaTime);
 
-            if (Vector3.Distance(transform.position, _startPosition) < 0.05f)
+            if (IsAtTargetPosition(_startPosition))
             {
                 _isMoving = true;
             }
         }
+    }
+
+    private bool IsAtTargetPosition(Vector3 target)
+    {
+        return (transform.position - target).sqrMagnitude < _positionThresholdSqr;
     }
 }
